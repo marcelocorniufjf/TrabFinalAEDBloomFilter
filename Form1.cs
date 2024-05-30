@@ -1,3 +1,4 @@
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace BloomFilterWindowsForms
@@ -5,11 +6,12 @@ namespace BloomFilterWindowsForms
     public partial class Form1 : Form
     {
         private BloomFilter bloomFilter;
+        private string operacao = "";
 
         public Form1()
         {
             InitializeComponent();
-            bloomFilter = new BloomFilter(50, 3, pictureBox1);
+            bloomFilter = new BloomFilter(32, 4, pictureBox1);
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
@@ -18,6 +20,7 @@ namespace BloomFilterWindowsForms
             bloomFilter.Insert(value);
             txtValue.Focus();
             txtValue.SelectAll();
+            operacao = $"inserir_{txtValue.Text}";
         }
 
         private void btnLookup_Click(object sender, EventArgs e)
@@ -26,6 +29,7 @@ namespace BloomFilterWindowsForms
             bloomFilter.Lookup(value);
             txtValue.Focus();
             txtValue.SelectAll();
+            operacao = $"buscar_{txtValue.Text}";
         }
 
         private void txtValue_KeyDown(object sender, KeyEventArgs e)
@@ -41,6 +45,14 @@ namespace BloomFilterWindowsForms
             if (!char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Alt == true && e.KeyCode == Keys.P)
+            {
+                pictureBox1.Image.Save($"E:\\Mestrado\\Disciplinas\\AED\\Trabalho Final\\Imagens\\BF_{operacao}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.jpg", ImageFormat.Png);
             }
         }
     }
